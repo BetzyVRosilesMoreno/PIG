@@ -12,6 +12,28 @@ struct ContentView: View {
     @State private var gameScore = 0
     @State private var randomValue = 0
     @State private var rotation = 0.0
+    func endTurn () {
+        turnScore = 0
+        randomValue = 0
+    }
+    func chooserandom(times: Int) {
+        if times > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                randomValue = Int.random(in: 1...6)
+                chooserandom(times: times - 1)
+            }
+        }
+        if times == 0 {
+            if randomValue == 1 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    endTurn()
+                }
+            }
+            else {
+                turnScore += randomValue
+            }
+        }
+    }
     var body: some View {
         ZStack {
             Color.gray.opacity(0.7).ignoresSafeArea()
@@ -28,11 +50,18 @@ struct ContentView: View {
                 CustomText(text: "Turn Score: \(turnScore)")
                 HStack {
                     Button("Roll") {
-                        
+                        chooserandom(times: 3)
+                        withAnimation(.interpolatingSpring(stiffness: 10, damping: 2)) {
+                            rotation += 360
+                        }
                     }
                     .buttonStyle(CustomButtonStyle())
                     Button("Hold") {
-                        
+                        gameScore += turnScore
+                        endTurn()
+                        withAnimation(.easeInOut(duration: 1)) {
+                            rotation += 360
+                        }
                     }
                     .buttonStyle(CustomButtonStyle())
                 }
