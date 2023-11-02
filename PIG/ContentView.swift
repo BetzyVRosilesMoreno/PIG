@@ -53,6 +53,11 @@ struct ContentView: View {
                     NavigationLink("How to play", destination: InstuctionsView())
                         .font(Font.custom("Marker Felt", size: 24))
                         .padding()
+                    Button("Reset") {
+                        endTurn()
+                        gameScore = 0
+                    }
+                    .font(Font.custom("Marker Felt", size: 24))
                     Spacer()
                 }
             }
